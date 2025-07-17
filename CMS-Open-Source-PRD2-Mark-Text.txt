@@ -1,0 +1,721 @@
+CMS-Open-Source-PRD2-Mark-Text
+
+https://claude.ai/chat/ab6c749d-af9c-4ab2-a899-e5440735a2b6
+
+https://claude.ai/public/artifacts/495bbfdc-31ef-4800-a366-d15cd86e7ad3
+
+# Enhanced MarkText - Publishing & Multi-Page Website Builder
+## Product Requirements Document (PRD)
+
+### Executive Summary
+Enhance the existing MarkText markdown editor by adding web publishing capabilities, multi-page website management, wireframing tools, and a built-in database. This creates a streamlined content creation and publishing platform that can serve websites directly to custom domains/subdomains.
+
+### Project Overview
+**Project Name:** Enhanced MarkText Publisher  
+**Base Application:** MarkText (Electron-based markdown editor)  
+**Target Platform:** Cross-platform desktop application  
+**Development Approach:** Feature enhancement of existing MarkText codebase  
+**Primary Users:** Content creators, bloggers, small businesses, freelancers  
+
+### Core Value Proposition
+Transform MarkText from a local markdown editor into a complete website publishing platform that can:
+- Create and manage multi-page websites
+- Publish directly to custom URLs
+- Support domain/subdomain pointing
+- Include wireframing capabilities for design planning
+- Store content and site data in built-in database
+
+### Enhanced Feature Set
+
+#### 1. Web Publishing Engine
+**Core Functionality:**
+- Generate static HTML/CSS from markdown content
+- Publish to unique, shareable URLs
+- Support custom domain/subdomain pointing
+- Built-in web server for hosting published content
+- SSL certificate management for custom domains
+
+**Technical Implementation:**
+- Static site generator built into MarkText
+- Express.js server for hosting
+- DNS integration for custom domains
+- Automatic HTTPS via Let's Encrypt
+
+#### 2. Multi-Page Website Manager
+**Core Functionality:**
+- Project-based organization (each website is a project)
+- Page hierarchy and navigation management
+- Template system for consistent styling
+- Menu/navigation builder
+- Site-wide settings and configuration
+
+**Site Structure Management:**
+```
+Website Project
+├── Home Page
+├── About Page
+├── Blog/
+│   ├── Post 1
+│   ├── Post 2
+│   └── Post 3
+├── Contact Page
+└── Site Settings
+    ├── Navigation
+    ├── Styling/Theme
+    └── Domain Configuration
+```
+
+#### 3. Wireframing Module
+**Core Functionality:**
+- Simple drag-and-drop wireframe builder
+- Page layout planning before content creation
+- Component library (headers, content blocks, sidebars, etc.)
+- Export wireframes to markdown templates
+- Visual site map creation
+
+**Wireframe Components:**
+- Header sections
+- Navigation menus
+- Content blocks
+- Sidebar elements
+- Footer sections
+- Image placeholders
+- Contact forms
+
+#### 4. Built-in Database (SQLite)
+**Core Functionality:**
+- Store website projects and pages
+- Content versioning and history
+- Site settings and configurations
+- Analytics data (page views, visitor stats)
+- Contact form submissions
+
+**Database Schema:**
+```sql
+-- Projects (Websites)
+CREATE TABLE projects (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  domain TEXT,
+  subdomain TEXT,
+  created_at DATETIME,
+  updated_at DATETIME
+);
+
+-- Pages
+CREATE TABLE pages (
+  id INTEGER PRIMARY KEY,
+  project_id INTEGER,
+  title TEXT NOT NULL,
+  slug TEXT NOT NULL,
+  content TEXT,
+  template TEXT,
+  published BOOLEAN DEFAULT 0,
+  created_at DATETIME,
+  updated_at DATETIME
+);
+
+-- Site Settings
+CREATE TABLE site_settings (
+  id INTEGER PRIMARY KEY,
+  project_id INTEGER,
+  setting_key TEXT,
+  setting_value TEXT
+);
+```
+
+### Enhanced User Interface
+
+#### Main Application Layout
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Enhanced MarkText - [Edit|Preview|Wireframe|Publish] Tabs  │
+├─────────────┬─────────────────┬─────────────────────────────┤
+│ Website     │ Main Workspace  │ Live Preview Panel          │
+│ Manager     │                 │                             │
+│             │ ┌─────────────┐ │ ┌─────────────────────────┐ │
+│ 🌐 Site 1   │ │   Content   │ │ │                         │ │
+│   📄 Home   │ │   Editor    │ │ │    Live Website         │ │
+│   📄 About  │ │     or      │ │ │    Preview              │ │
+│   📁 Blog   │ │ Wireframe   │ │ │                         │ │
+│     📝 Post1│ │   Builder   │ │ │    [Visit Live Site]    │ │
+│     📝 Post2│ │             │ │ │                         │ │
+│   📄 Contact│ │             │ │ │    Analytics Summary    │ │
+│             │ └─────────────┘ │ │    📊 Views: 1,234      │ │
+│ 🌐 Site 2   │                 │ │    👥 Visitors: 456     │ │
+│   📄 Home   │                 │ │                         │ │
+│   📄 Services│               │ └─────────────────────────┘ │
+│             │                 │                             │
+│ ⚙️ Settings │                 │                             │
+│ 🔗 Domains  │                 │                             │
+└─────────────┴─────────────────┴─────────────────────────────┘
+```
+
+### Functional Requirements
+
+#### FR1: Enhanced Content Management
+- **FR1.1:** Create and manage multiple website projects
+- **FR1.2:** Organize pages within projects with hierarchy
+- **FR1.3:** Rich markdown editing with live preview
+- **FR1.4:** Template system for consistent page layouts
+- **FR1.5:** Content versioning and revision history
+
+#### FR2: Web Publishing System
+- **FR2.1:** Generate static websites from markdown content
+- **FR2.2:** Publish to unique URLs (e.g., yoursite.marktext.pub)
+- **FR2.3:** Custom domain/subdomain pointing support
+- **FR2.4:** SSL certificate automatic provisioning
+- **FR2.5:** SEO optimization (meta tags, sitemaps, etc.)
+
+#### FR3: Wireframing Capabilities
+- **FR3.1:** Visual page layout designer
+- **FR3.2:** Drag-and-drop interface builder
+- **FR3.3:** Component library for common elements
+- **FR3.4:** Export wireframes to markdown templates
+- **FR3.5:** Site architecture visualization
+
+#### FR4: Multi-Page Management
+- **FR4.1:** Navigation menu builder
+- **FR4.2:** Page linking and internal references
+- **FR4.3:** Blog/article organization with categories
+- **FR4.4:** Site-wide styling and theme management
+- **FR4.5:** Contact forms and basic interactivity
+
+#### FR5: Database Integration
+- **FR5.1:** SQLite database for all site data
+- **FR5.2:** Content backup and restore
+- **FR5.3:** Basic analytics tracking
+- **FR5.4:** Contact form submission storage
+- **FR5.5:** Site configuration management
+
+### Technical Architecture
+
+#### Core Components
+```javascript
+// Enhanced MarkText Architecture
+const enhancedMarkText = {
+  // Existing MarkText functionality
+  editor: markTextCore,
+  
+  // New publishing engine
+  publisher: {
+    generator: staticSiteGenerator,
+    server: expressServer,
+    domains: domainManager,
+    ssl: certificateManager
+  },
+  
+  // Wireframing module
+  wireframe: {
+    builder: dragDropBuilder,
+    components: elementLibrary,
+    export: templateGenerator
+  },
+  
+  // Database layer
+  database: {
+    engine: sqlite3,
+    models: dataModels,
+    migrations: schemaManager
+  },
+  
+  // Project management
+  projects: {
+    manager: siteManager,
+    pages: pageOrganizer,
+    settings: configManager
+  }
+};
+```
+
+#### Publishing Flow
+1. **Content Creation:** Write in markdown with enhanced editor
+2. **Wireframe Planning:** Design layout using wireframe tools
+3. **Site Building:** Organize pages and set navigation
+4. **Publishing:** Generate static site and deploy to URL
+5. **Domain Setup:** Point custom domain to published site
+
+### Development Phases
+
+#### Phase 1: Foundation Enhancement (Week 1)
+- Fork MarkText repository
+- Add SQLite database integration
+- Create project management system
+- Basic multi-page organization
+
+#### Phase 2: Publishing Engine (Week 1-2)
+- Static site generator implementation
+- Basic web server integration
+- URL generation and hosting
+- Simple theme system
+
+#### Phase 3: Wireframing Module (Week 2)
+- Drag-and-drop wireframe builder
+- Component library creation
+- Template export functionality
+- Integration with content editor
+
+#### Phase 4: Publishing & Domains (Week 2)
+- Custom domain pointing
+- SSL certificate automation
+- Analytics integration
+- Final polish and testing
+
+### User Workflows
+
+#### Creating a New Website
+1. **New Project:** Create new website project
+2. **Wireframe:** Design page layouts using wireframe tool
+3. **Content:** Write pages in markdown editor
+4. **Organize:** Set up navigation and page hierarchy
+5. **Style:** Choose or customize theme
+6. **Publish:** Deploy to unique URL
+7. **Domain:** Point custom domain (optional)
+
+#### Publishing Workflow
+```
+[Edit Content] → [Preview] → [Publish] → [Live Site]
+     ↓              ↓          ↓           ↓
+  Auto-save    Live preview  Generate    Update URL
+     ↓              ↓        static       ↓
+  Database      Show in     HTML/CSS    Notify
+   storage      preview      files     visitors
+```
+
+### Success Metrics
+
+#### Business Success
+- **Deployment speed:** Website published in < 30 seconds
+- **User adoption:** Easy creation of first website within 15 minutes
+- **Performance:** Fast loading websites (< 3 second load times)
+- **Reliability:** 99.9% uptime for published sites
+
+#### Technical Success
+- **Database performance:** All operations < 100ms
+- **Static generation:** Site build time < 10 seconds
+- **Memory usage:** < 300MB total application footprint
+- **Cross-platform:** Consistent functionality across OS
+
+### Monetization Opportunities
+
+#### Freemium Model
+- **Free tier:** 1 website, basic templates, .marktext.pub subdomain
+- **Pro tier:** Unlimited websites, custom domains, advanced themes
+- **Business tier:** Analytics, forms, custom branding removal
+
+#### Revenue Streams
+- Monthly/annual subscriptions
+- Custom domain setup services
+- Premium templates and themes
+- Advanced analytics and features
+
+### Competitive Advantages
+
+#### Unique Value Proposition
+- **All-in-one solution:** Writing, wireframing, and publishing in one app
+- **Offline-first:** Work without internet, publish when ready
+- **No technical knowledge required:** Visual tools for non-developers
+- **Fast deployment:** From idea to live website in minutes
+- **Cost-effective:** Eliminate need for separate hosting services
+
+### Risk Assessment
+
+#### Low-Risk Factors
+- **Building on proven foundation:** MarkText is stable and well-designed
+- **Incremental enhancement:** Adding features vs. building from scratch
+- **Simple technology stack:** SQLite, static files, standard web tech
+- **Clear user need:** Market demand for easy website creation
+
+#### Mitigation Strategies
+- **Staged development:** Each phase delivers working functionality
+- **User testing:** Regular feedback from target users
+- **Performance monitoring:** Keep app lightweight and fast
+- **Backup systems:** Multiple data protection layers
+
+### Implementation Recommendations
+
+#### Technical Approach
+1. **Fork MarkText** rather than building from scratch
+2. **SQLite integration** using better-sqlite3 for performance
+3. **Static site generation** using existing proven libraries
+4. **Express.js** for local development server
+5. **Electron auto-updater** for seamless updates
+
+#### Development Priorities
+1. **Core publishing** functionality first
+2. **Multi-page management** second
+3. **Wireframing tools** third
+4. **Advanced features** (analytics, forms) last
+
+This focused approach will create a valuable, functional product that can compete with platforms like Notion sites, Carrd, or simple WordPress setups, while providing the unique advantage of offline markdown editing with integrated publishing.
+
+https://claude.ai/public/artifacts/44fea6ff-6452-4558-bdb6-be35292af21d
+
+# SolarApp.dev Development Prompt
+## Enhanced MarkText with Publishing & Multi-Page Capabilities
+
+### Project Brief
+Enhance the existing MarkText markdown editor by adding web publishing capabilities, multi-page website management, wireframing tools, and a built-in SQLite database. Create a complete content-to-website platform that can publish to unique URLs and support custom domain pointing.
+
+### Base Application
+**Fork and enhance:** https://github.com/marktext/marktext.git
+- **Existing foundation:** Proven Electron-based markdown editor
+- **Enhancement approach:** Add new modules while preserving core functionality
+- **Target platforms:** Windows, macOS, Linux (existing MarkText compatibility)
+
+### Core Enhancements Required
+
+#### 1. Web Publishing Engine
+**Add static site generation capabilities to MarkText:**
+
+```javascript
+// New publishing module to add
+const publishingEngine = {
+  generator: {
+    // Convert markdown to static HTML/CSS
+    buildSite: (project) => generateStaticSite(project),
+    themes: themeManager,
+    seo: seoOptimizer
+  },
+  server: {
+    // Built-in Express server for hosting
+    host: expressServer,
+    ssl: letsEncryptIntegration,
+    domains: customDomainManager
+  },
+  deploy: {
+    // Publish to unique URLs
+    url: `${projectName}.marktext.pub`,
+    customDomain: domainPointing
+  }
+};
+```
+
+**Implementation Requirements:**
+- Static HTML/CSS generation from markdown
+- Built-in Express.js server for local preview and hosting
+- Unique URL generation (e.g., `mysite.marktext.pub`)
+- Custom domain/subdomain pointing support
+- Automatic SSL certificate provisioning
+- SEO optimization (meta tags, sitemaps)
+
+#### 2. Multi-Page Website Management
+**Transform single-document editing into multi-page site management:**
+
+**New UI Components:**
+```
+┌─────────────┬─────────────────┬─────────────────┐
+│ Site Manager│ Content Editor  │ Live Preview    │
+│             │                 │                 │
+│ 🌐 Website1 │ ┌─────────────┐ │ ┌─────────────┐ │
+│   📄 Home   │ │   Enhanced  │ │ │   Website   │ │
+│   📄 About  │ │   MarkText  │ │ │   Preview   │ │
+│   📁 Blog   │ │   Editor    │ │ │             │ │
+│     📝 Post1│ │             │ │ │ [Live URL]  │ │
+│     📝 Post2│ │             │ │ │             │ │
+│   📄 Contact│ │             │ │ │  Analytics  │ │
+│             │ └─────────────┘ │ │  📊 Views   │ │
+│ ⚙️ Settings │                 │ └─────────────┘ │
+└─────────────┴─────────────────┴─────────────────┘
+```
+
+**Requirements:**
+- Project-based organization (each website = one project)
+- Page hierarchy with drag-and-drop organization
+- Navigation menu builder
+- Page linking and internal references
+- Template system for consistent layouts
+- Blog/article categorization
+
+#### 3. Built-in Database (SQLite)
+**Add SQLite database for data persistence:**
+
+```sql
+-- Core database schema to implement
+CREATE TABLE projects (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  domain TEXT,
+  theme TEXT DEFAULT 'default',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE pages (
+  id INTEGER PRIMARY KEY,
+  project_id INTEGER,
+  title TEXT NOT NULL,
+  slug TEXT NOT NULL,
+  content TEXT,
+  template TEXT,
+  published BOOLEAN DEFAULT 0,
+  order_index INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (project_id) REFERENCES projects (id)
+);
+
+CREATE TABLE site_settings (
+  id INTEGER PRIMARY KEY,
+  project_id INTEGER,
+  setting_key TEXT,
+  setting_value TEXT,
+  FOREIGN KEY (project_id) REFERENCES projects (id)
+);
+
+CREATE TABLE analytics (
+  id INTEGER PRIMARY KEY,
+  project_id INTEGER,
+  page_slug TEXT,
+  visitor_count INTEGER DEFAULT 0,
+  last_visit DATETIME,
+  FOREIGN KEY (project_id) REFERENCES projects (id)
+);
+```
+
+**Database Integration Requirements:**
+- SQLite3 integration using better-sqlite3
+- Content versioning and auto-save
+- Site configuration storage
+- Basic analytics data collection
+- Backup and restore capabilities
+
+#### 4. Simple Wireframing Module
+**Add visual page planning capabilities:**
+
+**Wireframe Interface:**
+```javascript
+const wireframeBuilder = {
+  components: [
+    'Header Section',
+    'Navigation Menu', 
+    'Content Block',
+    'Image Placeholder',
+    'Sidebar',
+    'Footer Section',
+    'Contact Form'
+  ],
+  canvas: dragDropInterface,
+  export: markdownTemplateGenerator
+};
+```
+
+**Requirements:**
+- Drag-and-drop wireframe canvas
+- Pre-built component library
+- Visual site map creation
+- Export wireframes to markdown page templates
+- Integration with main editor for template application
+
+### Development Approach
+
+#### Phase 1: Database & Project Management (Week 1)
+**Core Infrastructure:**
+```javascript
+// Add to existing MarkText structure
+const enhancedMarkText = {
+  // Preserve existing functionality
+  ...originalMarkText,
+  
+  // Add new modules
+  database: sqliteManager,
+  projects: projectManager,
+  ui: enhancedInterface
+};
+```
+
+**Deliverables:**
+- SQLite database integration
+- Project creation and management
+- Multi-page organization UI
+- Basic page navigation
+
+#### Phase 2: Publishing Engine (Week 1-2)
+**Static Site Generation:**
+```javascript
+const publishingFlow = {
+  1: 'collectProjectPages',
+  2: 'applyTemplates', 
+  3: 'generateStaticHTML',
+  4: 'optimizeAssets',
+  5: 'deployToURL',
+  6: 'updateDNS' // if custom domain
+};
+```
+
+**Deliverables:**
+- Static HTML/CSS generation from markdown
+- Local Express server integration
+- Unique URL publishing system
+- Basic theme system
+- Custom domain pointing setup
+
+#### Phase 3: Wireframing & Advanced Features (Week 2)
+**Enhanced User Experience:**
+
+**Deliverables:**
+- Wireframe builder interface
+- Component library
+- Template export functionality
+- Basic analytics tracking
+- Final UI polish and testing
+
+### Technical Specifications
+
+#### Required Dependencies
+```json
+{
+  "dependencies": {
+    "better-sqlite3": "^8.7.0",
+    "express": "^4.18.2", 
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "marked": "^9.1.6",
+    "front-matter": "^4.0.2",
+    "node-html-parser": "^6.1.12",
+    "mime-types": "^2.1.35"
+  }
+}
+```
+
+#### File Structure Enhancement
+```
+enhanced-marktext/
+├── src/
+│   ├── main/ (existing MarkText)
+│   ├── renderer/ (existing MarkText)
+│   └── modules/ (new additions)
+│       ├── database/
+│       │   ├── schema.sql
+│       │   ├── manager.js
+│       │   └── models/
+│       ├── publishing/
+│       │   ├── generator.js
+│       │   ├── server.js
+│       │   └── themes/
+│       ├── wireframe/
+│       │   ├── builder.js
+│       │   ├── components.js
+│       │   └── templates/
+│       └── projects/
+│           ├── manager.js
+│           └── navigation.js
+├── themes/ (new)
+│   ├── default/
+│   ├── blog/
+│   └── business/
+└── templates/ (new)
+    ├── page-templates/
+    └── wireframe-exports/
+```
+
+### Key Features Implementation
+
+#### Publishing Workflow
+```javascript
+// Example implementation approach
+class PublishingManager {
+  async publishSite(projectId) {
+    const project = await db.getProject(projectId);
+    const pages = await db.getProjectPages(projectId);
+    
+    // Generate static site
+    const siteData = await this.generateSite(project, pages);
+    
+    // Deploy to hosting
+    const url = await this.deployToURL(project.name, siteData);
+    
+    // Update project with live URL
+    await db.updateProject(projectId, { liveUrl: url });
+    
+    return url;
+  }
+}
+```
+
+#### Multi-Page Navigation
+```javascript
+// Navigation builder implementation
+class NavigationBuilder {
+  createMenu(pages) {
+    return pages
+      .filter(page => page.published)
+      .sort((a, b) => a.order_index - b.order_index)
+      .map(page => ({
+        title: page.title,
+        url: `/${page.slug}`,
+        children: this.getChildPages(page.id)
+      }));
+  }
+}
+```
+
+### User Experience Requirements
+
+#### Enhanced MarkText Interface
+- **Seamless integration:** New features feel native to MarkText
+- **Familiar workflow:** Preserve existing MarkText user experience
+- **Progressive disclosure:** Advanced features don't overwhelm basic users
+- **Visual feedback:** Clear indicators for publishing status and site health
+
+#### Publishing Experience
+- **One-click publishing:** Deploy site with single button
+- **Live preview:** See changes immediately
+- **Status indicators:** Clear feedback on build and deploy progress
+- **Error handling:** Helpful messages for any issues
+
+### Success Criteria
+
+#### Functional Requirements
+✅ **Multi-page management:** Create and organize unlimited pages per project  
+✅ **Publishing capability:** Generate and host static websites  
+✅ **Custom URLs:** Each project gets unique URL + custom domain support  
+✅ **Database integration:** All data persisted in SQLite  
+✅ **Wireframing tools:** Visual page planning capabilities  
+
+#### Performance Requirements
+✅ **Fast publishing:** Site generation and deployment < 30 seconds  
+✅ **Responsive UI:** No lag when switching between pages/projects  
+✅ **Small footprint:** App size increase < 50MB from base MarkText  
+✅ **Cross-platform:** Works consistently on Windows, macOS, Linux  
+
+#### User Experience Requirements
+✅ **Learning curve:** Existing MarkText users productive immediately  
+✅ **Site creation:** First website published within 15 minutes  
+✅ **Professional results:** Generated sites look modern and professional  
+
+### Monetization Model
+
+#### Freemium Structure
+- **Free tier:** 1 website, .marktext.pub subdomain, basic themes
+- **Pro tier ($9/month):** Unlimited sites, custom domains, premium themes
+- **Business tier ($19/month):** Analytics, forms, custom branding removal
+
+#### Revenue Implementation
+```javascript
+// License checking (implement in publishing module)
+const licenseManager = {
+  checkLimits: (userId, action) => {
+    // Verify user tier and enforce limits
+    // Free: 1 site, Pro: unlimited, etc.
+  },
+  upgradePrompt: () => {
+    // Show upgrade options when limits reached
+  }
+};
+```
+
+### Development Budget Estimate
+
+#### Realistic Scope (2-3 weeks development)
+- **Week 1:** Database integration + multi-page management
+- **Week 2:** Publishing engine + static site generation  
+- **Week 3:** Wireframing tools + polish + testing
+
+#### Expected Deliverable
+A fully functional enhanced MarkText that can:
+1. Manage multi-page websites
+2. Publish to live URLs
+3. Support custom domains
+4. Include basic wireframing
+5. Store all data in local SQLite database
+
+This approach builds on MarkText's proven foundation while adding the specific publishing and multi-page capabilities you need, creating a unique and valuable product that fills the gap between simple markdown editors and complex website builders.
